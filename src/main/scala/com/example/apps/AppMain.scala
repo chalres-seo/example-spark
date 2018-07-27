@@ -9,13 +9,15 @@ import com.databricks.spark.avro._
 
 object AppMain extends LazyLogging {
   // Init SparkSession.
-  val spark = SparkFactory.getSparkSession
+  private val spark = SparkFactory.getSparkSession
+
+  private val _exampleDataPath = "tmp/your-example-data.csv"
 
   def main(args: Array[String]): Unit = {
     logger.debug(s"start spark app. name: ${AppConfig.sparkAppName}")
     logger.debug(s"spark version: ${spark.version}")
 
-    val rawDF = DataFrameUtils.trimColumnName(this.getExampleDataFrame())
+    val rawDF = DataFrameUtils.trimColumnName(this.getExampleDataFrame(_exampleDataPath))
 
     this.saveOrc(rawDF, "tmp/rawdata.snappy.orc", 1)
     this.saveAvro(rawDF, "tmp/rawdata.snappy.avro", 1)
@@ -23,10 +25,10 @@ object AppMain extends LazyLogging {
     this.saveJson(rawDF, "tmp/rawdata.gzip.json", 1)
   }
 
-  def getExampleDataFrame(): DataFrame = {
+  def getExampleDataFrame(exampleDataPath: String): DataFrame = {
     spark.read
       .option("header", "true")
-      .csv("tmp/WomensClothingE-CommerceReviews.csv")
+      .csv(exampleDataPath)
       .withColumnRenamed("_c0", "Seq")
   }
 
