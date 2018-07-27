@@ -1,0 +1,86 @@
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'scala'
+
+sourceCompatibility = 1.8
+
+def scalaVersion = '2.11.12'
+def typeSafeConfig = '1.3.3'
+def scalaLogging = '3.9.0'
+def logbackVersion = '1.2.3'
+
+def sparkVersion = '2.3.1'
+def hadoopVersion = '2.8.2'
+
+def junitVersion = '4.12'
+
+def palantir = "https://dl.bintray.com/palantir/releases/"
+def palantitSparkVersion = '2.4.0-palantir.28'
+
+def clouderaMavenRepo = "https://repository.cloudera.com/content/repositories/releases/"
+def cdhSparkVersion = '1.6.0-cdh5.15.0'
+
+def hortonworks = "http://repo.hortonworks.com/content/repositories/releases/"
+def hdpSparkVersion = '2.3.1.3.0.0.0-1634'
+
+def sparkAvroVersion = '4.0.0'
+
+repositories {
+    mavenCentral()
+//    maven { url palantir }
+//    maven { url hortonworks }
+//    maven { url clouderaMavenRepo }
+}
+
+// Common
+dependencies {
+    compile group: 'org.scala-lang', name: 'scala-library', version: scalaVersion
+    compile group: 'com.typesafe', name: 'config', version: typeSafeConfig
+    compile group: 'com.typesafe.scala-logging', name: 'scala-logging_2.11', version: scalaLogging
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+}
+
+// Utils
+dependencies {
+    compile group: 'com.databricks', name: 'spark-avro_2.11', version: sparkAvroVersion
+}
+
+// Hadoop
+dependencies {
+    compile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion
+    compile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion
+    compile group: 'org.apache.hadoop', name: 'hadoop-aws', version: hadoopVersion
+}
+
+// Spark Central
+dependencies {
+    compile group: 'org.apache.spark', name: 'spark-core_2.11', version: sparkVersion
+    compile group: 'org.apache.spark', name: 'spark-sql_2.11', version: sparkVersion
+    compile group: 'org.apache.spark', name: 'spark-hive_2.11', version: sparkVersion
+    compile group: 'org.apache.spark', name: 'spark-streaming_2.11', version: sparkVersion
+    compile group: 'org.apache.spark', name: 'spark-streaming-kinesis-asl_2.11', version: sparkVersion
+}
+
+// Test
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: junitVersion
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.example.com.example.apps.AppMain"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task(main, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.example.com.example.apps.AppMain'
+    classpath = sourceSets.main.runtimeClasspath
+    args '', ''
+    systemProperty '', ''
+}
