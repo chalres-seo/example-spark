@@ -7,9 +7,10 @@ class TestAppMain {
   @Test
   def testAppMain(): Unit = {
     // Init Local SparkSession.
-    val spark = SparkFactory.getSparkSession("local[8]")
+    SparkFactory.getSparkSession("local[*]")
 
     AppMain.main(Array(""))
   }
 }
+
 

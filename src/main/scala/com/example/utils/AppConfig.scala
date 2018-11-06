@@ -4,11 +4,12 @@ import java.io.{File, FileInputStream}
 import java.util.Properties
 
 import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.scalalogging.LazyLogging
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-object AppConfig {
+object AppConfig extends LazyLogging {
   // read application.conf
   private val conf: Config = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
 

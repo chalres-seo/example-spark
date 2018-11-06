@@ -12,6 +12,7 @@ object SparkFactory extends LazyLogging {
   private val sparkConf = new SparkConf()
     .set("spark.hadoop.fs.s3a.access.key", awsCredentitlas.getAWSAccessKeyId)
     .set("spark.hadoop.fs.s3a.secret.key", awsCredentitlas.getAWSSecretKey)
+    .set("spark.sql.avro.compression.codec","snappy")
     .setAll(AppConfig.sparkConfig)
 
   private val sparkSessionBuilder = SparkSession.builder()

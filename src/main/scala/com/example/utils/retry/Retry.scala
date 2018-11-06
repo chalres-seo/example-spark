@@ -1,7 +1,8 @@
 package com.example.utils.retry
 
-import com.typesafe.scalalogging.LazyLogging
 import com.example.utils.AppConfig
+import com.typesafe.scalalogging.LazyLogging
+import org.slf4j.LoggerFactory
 
 import scala.annotation.tailrec
 import scala.util.{Failure, Success, Try}
@@ -36,7 +37,8 @@ trait Retry extends LazyLogging {
   }
 }
 
-object Retry extends LazyLogging with Retry {
+object Retry extends Retry with LazyLogging {
+
   private val backoffTimeInMillis: Long = AppConfig.backoffTimeInMillis
   private val attemptMaxCount: Int = AppConfig.attemptMaxCount
 

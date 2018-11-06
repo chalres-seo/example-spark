@@ -6,32 +6,38 @@ apply plugin: 'scala'
 
 sourceCompatibility = 1.8
 
+// Repo
+def palantirRepo = "https://dl.bintray.com/palantir/releases/"
+def palantitSparkVersion = '2.4.0-palantir.28'
+
+def clouderaRepo = "https://repository.cloudera.com/content/repositories/releases/"
+def cdhSparkVersion = '1.6.0-cdh5.15.0'
+
+def hortonworksRepo = "http://repo.hortonworks.com/content/repositories/releases/"
+def hdpSparkVersion = '2.3.1.3.0.0.0-1634'
+
+def sonatypeRepo = "https://oss.sonatype.org/content/repositories/releases/"
+
+// Scala
 def scalaVersion = '2.11.12'
 def typeSafeConfig = '1.3.3'
 def scalaLogging = '3.9.0'
 def logbackVersion = '1.2.3'
 
-def sparkVersion = '2.3.1'
+// Spark
+def sparkVersion = '2.2.0'
 def hadoopVersion = '2.8.2'
-
-def junitVersion = '4.12'
-
-def palantir = "https://dl.bintray.com/palantir/releases/"
-def palantitSparkVersion = '2.4.0-palantir.28'
-
-def clouderaMavenRepo = "https://repository.cloudera.com/content/repositories/releases/"
-def cdhSparkVersion = '1.6.0-cdh5.15.0'
-
-def hortonworks = "http://repo.hortonworks.com/content/repositories/releases/"
-def hdpSparkVersion = '2.3.1.3.0.0.0-1634'
-
 def sparkAvroVersion = '4.0.0'
+
+// Test
+def junitVersion = '4.12'
 
 repositories {
     mavenCentral()
-//    maven { url palantir }
-//    maven { url hortonworks }
-//    maven { url clouderaMavenRepo }
+//    maven { url sonatypeRepo }
+//    maven { url palantirRepo }
+//    maven { url hortonworksRepo }
+//    maven { url clouderaRepo }
 }
 
 // Common
@@ -49,28 +55,53 @@ dependencies {
 
 // Hadoop
 dependencies {
-    compile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion
-    compile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion
-    compile group: 'org.apache.hadoop', name: 'hadoop-aws', version: hadoopVersion
+    compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion)
+    compile (group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion)
+    compile (group: 'org.apache.hadoop', name: 'hadoop-aws', version: hadoopVersion)
 }
 
-// Spark Central
+// Spark central
 dependencies {
-    compile group: 'org.apache.spark', name: 'spark-core_2.11', version: sparkVersion
-    compile group: 'org.apache.spark', name: 'spark-sql_2.11', version: sparkVersion
-    compile group: 'org.apache.spark', name: 'spark-hive_2.11', version: sparkVersion
-    compile group: 'org.apache.spark', name: 'spark-streaming_2.11', version: sparkVersion
-    compile group: 'org.apache.spark', name: 'spark-streaming-kinesis-asl_2.11', version: sparkVersion
+    compile (group: 'org.apache.spark', name: 'spark-core_2.11', version: sparkVersion)
+    compile (group: 'org.apache.spark', name: 'spark-sql_2.11', version: sparkVersion)
+    compile (group: 'org.apache.spark', name: 'spark-hive_2.11', version: sparkVersion)
+    compile (group: 'org.apache.spark', name: 'spark-streaming_2.11', version: sparkVersion)
+    compile (group: 'org.apache.spark', name: 'spark-streaming-kinesis-asl_2.11', version: sparkVersion)
+}
+
+//// Spark provided
+//dependencies {
+//    // Spark core provided
+//    compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
+//    compile group: 'org.spark-project.hive', name: 'hive-metastore', version: '1.2.1.spark2'
+//    compile group: 'org.spark-project.hive', name: 'hive-exec', version: '1.2.1.spark2'
+//    compile group: 'org.apache.thrift', name: 'libfb303', version: '0.9.3', ext: 'pom'
+//    compile group: 'org.apache.thrift', name: 'libthrift', version: '0.9.3', ext: 'pom'
+//    // Spark sql provided
+//    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.3.20.v20170531'
+//    // Spark streaming provided
+//    compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.20.v20170531'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-plus', version: '9.3.20.v20170531'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.3.20.v20170531'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-http', version: '9.3.20.v20170531'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.3.20.v20170531'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.3.20.v20170531'
+//}
+
+configurations.all {
+    resolutionStrategy.force 'com.google.guava:guava:14.0.1'
 }
 
 // Test
 dependencies {
+    compile 'org.scala-lang:scala-library:2.11.12'
     testCompile group: 'junit', name: 'junit', version: junitVersion
 }
 
 jar {
     manifest {
-        attributes "Main-Class": "com.example.com.example.apps.AppMain"
+        attributes "Main-Class": "com.example.apps.AppMain"
     }
 
     from {

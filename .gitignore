@@ -48,3 +48,4 @@ metastore_db/
 
 # Avoid ignoring
 !example/example_record.txt
+example-spark.iml
